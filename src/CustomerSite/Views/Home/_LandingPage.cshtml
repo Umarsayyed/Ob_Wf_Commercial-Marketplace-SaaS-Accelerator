@@ -5,6 +5,7 @@
 
 @{
     ViewData["Title"] = "Home";
+    bool isAuthenticated = TempData["IsAuthenticated"] != null && (bool)TempData["IsAuthenticated"];
 }
 @if (!Model.ShowWelcomeScreen)
 {
@@ -207,18 +208,18 @@
     </div>
 }
 else
-{
+{   
     <div class="pt-5">
         <div class="card p-3 ">
             <div class="text-center">
                 <h1 class="display-4">Welcome</h1>
             </div>
-            <div class="text-left">
+           @*  <div class="text-left">
                 <p>
                     Get started with integrating your <b> Software as a Service (SaaS) </b> solution with the <b> SaaS fulfillment APIs version 2 in Microsoft commercial marketplace. </b>
                 </p>
                 <p><a href="https://docs.microsoft.com/en-us/azure/marketplace/partner-center-portal/pc-saas-fulfillment-api-v2" target="_blank">Click here </a><span>for the API documentation.</span> </p>
-            </div>
+            </div> *@
             <div>
                 <b>To purchase this SaaS offer:</b>
                 <ul>
@@ -230,6 +231,12 @@ else
             </div>
         </div>
     </div>
+    @if(isAuthenticated)
+    {
+        <div style="margin-top: 20px; text-align: end;">
+            <a href="https://optworkflow.app" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">Click Here to Access OptWorkFlow Application</a>
+        </div>
+    }    
 }
 <script type="text/javascript">
 

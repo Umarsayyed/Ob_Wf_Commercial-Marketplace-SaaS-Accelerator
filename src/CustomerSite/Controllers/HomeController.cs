@@ -279,6 +279,7 @@ public class HomeController : BaseController
                 else
                 {
                     this.TempData["ShowWelcomeScreen"] = "True";
+                    this.TempData["IsAuthenticated"] = this.User.Identity.IsAuthenticated;
                     subscriptionExtension.ShowWelcomeScreen = true;
                     return this.View(subscriptionExtension);
                 }
@@ -295,7 +296,7 @@ public class HomeController : BaseController
                 }
                 else
                 {
-                    this.TempData["ShowWelcomeScreen"] = "True";
+                    this.TempData["ShowWelcomeScreen"] = "True";                    
                     subscriptionExtension.ShowWelcomeScreen = true;
                     return this.View(subscriptionExtension);
                 }
