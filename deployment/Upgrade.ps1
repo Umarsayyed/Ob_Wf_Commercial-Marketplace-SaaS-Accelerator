@@ -10,8 +10,8 @@ Param(
    [string][Parameter(Mandatory)]$ResourceGroupForDeployment # Name of the resource group to deploy the resources
 )
 
-Write-Host "#### Web App Name ####" $WebAppNamePrefix
-Write-Host "#### Resource Group ####" $ResourceGroupForDeployment
+Write-Host "## Web App Name " $WebAppNamePrefix
+Write-Host "## Resource Group " $ResourceGroupForDeployment
 # Define the message
 $message = @"
 The SaaS Accelerator is offered under the MIT License as open source software and is not supported by Microsoft.
