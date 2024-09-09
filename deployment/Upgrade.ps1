@@ -63,6 +63,7 @@ $ConnectionString = az keyvault secret show `
 # Extract components from ConnectionString
 $Server = $ConnectionString -match "Server=(.*?);" | Out-Null; $Server = $Matches[1]
 $Database = $ConnectionString -match "Database=(.*?);" | Out-Null; $Database = $Matches[1]
+$token = (Get-AzAccessToken -ResourceUrl https://database.windows.net).Token
 
 Write-host "## Retrieved ConnectionString from KeyVault"
 Set-Content -Path ../src/AdminSite/appsettings.Development.json -value "{`"ConnectionStrings`": {`"DefaultConnection`":`"$ConnectionString`"}}"
@@ -101,9 +102,10 @@ BEGIN
 END;
 GO"
 
-Invoke-Sqlcmd -Query $compatibilityScript -ServerInstance $Server -Database $Database -G
+Invoke-Sqlcmd -Query $compatibilityScript -ServerInstance $Server -Database $Database -AccessToken $token
 Write-host "## Ran compatibility script against database"
-Invoke-Sqlcmd -InputFile "script.sql" -ServerInstance $Server -Database $Database -G
+# Run the migration script from a file using the access token
+Invoke-Sqlcmd -InputFile "script.sql" -ServerInstance $Server -Database $Database -AccessToken $token
 Write-host "## Ran migration against database"	
 
 Remove-Item -Path ../src/AdminSite/appsettings.Development.json
