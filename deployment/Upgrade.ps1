@@ -130,19 +130,11 @@ Compress-Archive -Path ../Publish/AdminSite/* -DestinationPath ../Publish/AdminS
 Write-host "## Code packages prepared." 
 
 Write-host "## Deploying code to Admin Portal"
-az webapp deploy `
-	--resource-group $ResourceGroupForDeployment `
-	--name $WebAppNameAdmin `
-	--src-path "../Publish/AdminSite.zip" `
-	--type zip
+az webapp deploy --resource-group $ResourceGroupForDeployment --name $WebAppNameAdmin --src-path "../Publish/AdminSite.zip" --type zip
 Write-host "## Deployed code to Admin Portal"
 
 Write-host "## Deploying code to Customer Portal"
-az webapp deploy `
-	--resource-group $ResourceGroupForDeployment `
-	--name $WebAppNamePortal `
-	--src-path "../Publish/CustomerSite.zip"  `
-	--type zip
+az webapp deploy resource-group $ResourceGroupForDeployment --name $WebAppNamePortal --src-path "../Publish/CustomerSite.zip" --type zip
 Write-host "## Deployed code to Customer Portal"
 
 Remove-Item -Path ../Publish -recurse -Force
