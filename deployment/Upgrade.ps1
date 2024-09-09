@@ -134,7 +134,7 @@ az webapp deploy --resource-group $ResourceGroupForDeployment --name $WebAppName
 Write-host "## Deployed code to Admin Portal"
 
 Write-host "## Deploying code to Customer Portal"
-az webapp deploy resource-group $ResourceGroupForDeployment --name $WebAppNamePortal --src-path "../Publish/CustomerSite.zip" --type zip
+az webapp deploy --resource-group $ResourceGroupForDeployment --name $WebAppNamePortal --src-path "../Publish/CustomerSite.zip" --type zip
 Write-host "## Deployed code to Customer Portal"
 
 Remove-Item -Path ../Publish -recurse -Force
