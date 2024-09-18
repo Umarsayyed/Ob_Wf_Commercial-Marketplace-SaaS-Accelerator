@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Marketplace.SaaS.Accelerator.DataAccess.Context;
 using Marketplace.SaaS.Accelerator.DataAccess.Contracts;
+using Marketplace.SaaS.Accelerator.DataAccess.DataModel;
 using Marketplace.SaaS.Accelerator.DataAccess.Entities;
+using Marketplace.SaaS.Accelerator.DataAccess.MQ;
 
 namespace Marketplace.SaaS.Accelerator.DataAccess.Services;
 
@@ -73,6 +75,7 @@ public class UsersRepository : IUsersRepository
         {
             existingUser.FullName = userDetail.FullName;
             this.context.Users.Update(existingUser);
+            DispatchUser(userDetail);
             return existingUser.UserId;
         }
         else
@@ -81,7 +84,34 @@ public class UsersRepository : IUsersRepository
         }
 
         this.context.SaveChanges();
+
+        DispatchUser(userDetail);
         return userDetail.UserId;
+    }
+
+    private void DispatchUser(Users entity)
+    {
+        var existingUser = this.context.Users.Where(s => s.EmailAddress == entity.EmailAddress).FirstOrDefault();      
+        Scur_User scur_User = new Scur_User();
+        scur_User.Id = existingUser.UserId;
+        scur_User.Email = existingUser.EmailAddress;
+        scur_User.UserName = existingUser.FullName;
+        scur_User.FirstName = existingUser.FullName;
+        scur_User.CreatedBy = existingUser.UserId;
+        scur_User.ModifiedBy = existingUser.UserId;
+        scur_User.SaveStatus = "Save";
+        scur_User.EntryOrigin = "User";         
+        scur_User.CreatedAt = DateTimeOffset.UtcNow;
+        scur_User.ModifiedAt = DateTimeOffset.UtcNow;
+
+        #region Reduntant table
+        var eventModel = new PubSubEventModel
+        {
+            Target = "Scur_Users",  // Set the Target property
+            Data = scur_User
+        };
+        MessageDispatcher.Dispatch(eventModel);
+        #endregion
     }
 
     /// <summary>
